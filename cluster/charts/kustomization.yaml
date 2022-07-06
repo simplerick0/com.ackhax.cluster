@@ -12,4 +12,5 @@ resources:
   - metrics-server.yaml
   - stakater.yaml
   - traefik.yaml
+  - vaultwarden.yaml
   - weaveworks-kured.yaml

@@ -76,6 +76,14 @@ For provisioning the following tools will be used:
 ### ⚠️ pre-commit
 
 It is advisable to install [pre-commit](https://pre-commit.com/) and the pre-commit hooks that come with this repository.
+
+0. Install Pre-Commit
+
+    ```
+    brew install pre-commit
+    brew install gcc@5
+    ```
+
 [sops-pre-commit](https://github.com/k8s-at-home/sops-pre-commit) will check to make sure you are not committing non-encrypted Kubernetes secrets to your repository.
 
 1. Enable Pre-Commit
@@ -233,6 +241,7 @@ In order to use Terraform and `cert-manager` with the Cloudflare DNS challenge y
     ```
 
 3. Install k3s with Ansible
+    * Task failed and had to `sudo chmod -R rick:rick /tmp/.ansible`
 
     ```sh
     task ansible:install

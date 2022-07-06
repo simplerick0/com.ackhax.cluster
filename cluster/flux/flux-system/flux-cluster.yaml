@@ -8,7 +8,8 @@ spec:
   interval: 10m
   ref:
     branch: main
-  url: https://github.com/simplerick0/com.ackhax.cluster
+  url: ssh://git@github.com/simplerick0/com.ackhax.cluster
+  secretRef: github-deploy-key
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization

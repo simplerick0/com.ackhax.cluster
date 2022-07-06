@@ -8,6 +8,7 @@ spec:
   interval: 15m
   chart:
     spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: vaultwarden
       version: 5.0.0
       sourceRef:
@@ -23,7 +24,8 @@ spec:
     remediation:
       retries: 5
   values:
-    nameOverride: vaultwarden
+    global:
+      nameOverride: vaultwarden
     fullnameOverride: vaultwarden
     image:
       repository: vaultwarden/server
@@ -73,7 +75,8 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: vaultwarden
+        type: emptyDir
+        # existingClaim: vaultwarden
     resources:
       requests:
         memory: 500Mi

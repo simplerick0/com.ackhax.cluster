@@ -12,7 +12,7 @@ spec:
       version: 5.0.0
       sourceRef:
         kind: HelmRepository
-        name: vaultwarden
+        name: k8s-at-home
         namespace: flux-system
       interval: 15m
   install:

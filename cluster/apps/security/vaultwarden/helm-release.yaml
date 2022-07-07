@@ -5,7 +5,7 @@ metadata:
   name: vaultwarden
   namespace: security
 spec:
-  interval: 15m
+  interval: 5m
   chart:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
@@ -15,7 +15,7 @@ spec:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux-system
-      interval: 15m
+      interval: 5m
   install:
     createNamespace: true
     remediation:
@@ -24,12 +24,14 @@ spec:
     remediation:
       retries: 5
   values:
-    global:
-      nameOverride: vaultwarden
-    fullnameOverride: vaultwarden
     image:
       repository: vaultwarden/server
       tag: 1.25.0
+    persistence:
+      config:
+        enabled: true
+        type: emptyDir
+        # existingClaim: vaultwarden
     env:
       SIGNUPS_ALLOWED: false
       INVITATIONS_ALLOWED: true
@@ -72,11 +74,6 @@ spec:
           - hosts:
               - "vault.${SECRET_DOMAIN}"
             secretName: "vaultwarden-tls"
-    persistence:
-      config:
-        enabled: true
-        type: emptyDir
-        # existingClaim: vaultwarden
     resources:
       requests:
         memory: 500Mi

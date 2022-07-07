@@ -6,6 +6,8 @@ metadata:
   name: vpn-gateway
   namespace: networking
   labels:
+    # Avoid variable substitution of shell vars below
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 spec:
   interval: 5m
   chart:

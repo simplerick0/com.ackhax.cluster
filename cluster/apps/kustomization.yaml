@@ -7,4 +7,5 @@ resources:
   - kube-system
   - networking
   - security
+  - vpn
   # - system-upgrade

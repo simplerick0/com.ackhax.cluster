@@ -241,7 +241,7 @@ In order to use Terraform and `cert-manager` with the Cloudflare DNS challenge y
     ```
 
 3. Install k3s with Ansible
-    * Task failed and had to `sudo chmod -R rick:rick /tmp/.ansible`
+    * Task failed and had to `sudo chown -R rick:rick /tmp/.ansible`
 
     ```sh
     task ansible:install

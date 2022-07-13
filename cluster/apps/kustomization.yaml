@@ -4,8 +4,8 @@ kind: Kustomization
 resources:
   - default
   - flux-system
+  - highseas
   - kube-system
   - networking
   - security
-  - vpn
   # - system-upgrade

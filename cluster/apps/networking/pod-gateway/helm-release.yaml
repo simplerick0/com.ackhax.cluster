@@ -134,7 +134,9 @@ spec:
       gatewayLabel: setGateway
       gatewayAnnotation: setGateway
       namespaceSelector:
-        label: highseas
+        type: label
+        label: vpn-routed-gateway
+        custom: {}
     persistence:
       data:
         enabled: true

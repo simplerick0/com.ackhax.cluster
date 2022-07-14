@@ -1,0 +1,103 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: qbittorrent
+  namespace: downloads
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: qbittorrent
+      version: 13.4.3
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home-charts
+        namespace: flux-system
+      interval: 5m
+  values:
+
+    image:
+      repository: ghcr.io/k8s-at-home/qbittorrent
+      tag: v4.4.2
+
+    env:
+      TZ: '${TIMEZONE}'
+
+    podAnnotations:
+      setGateway: 'true'
+
+    settings:
+      automaticPortSetup: false
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+      bittorrent:
+        enabled: true
+        type: LoadBalancer
+        externalIPs:
+          - '${HIGHSEAS_QBITTORRENT_ADDRESS}'
+        # ports:
+        #   bittorrent:
+        #     enabled: true
+        #     port: ${VPN_FORWARDED_PORT_1}
+        #     protocol: UDP
+        #     targetPort: ${VPN_FORWARDED_PORT_1}
+        externalTrafficPolicy: Local
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: 'nginx'
+        annotations:
+          cert-manager.io/cluster-issuer: 'letsencrypt-production'
+          hajimari.io/enable: 'true'
+          hajimari.io/icon: 'cloud-download'
+          nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+        hosts:
+          - host: 'qb.${SECRET_DOMAIN}'
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - 'qb.${SECRET_DOMAIN}'
+            secretName: 'qbittorrent-tls'
+
+    podSecurityContext:
+      supplementalGroups:
+        - 100
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: qbittorrent-config
+      media:
+        enabled: true
+        existingClaim: qbittorrent-media
+        # enabled: true
+        # type: custom
+        # volumeSpec:
+        #   nfs:
+        #     server: 192.168.1.101
+        #     path: /srv/nfs
+        # mountPath: /media
+
+    resources:
+      requests:
+        memory: 250Mi
+        cpu: 500m
+      limits:
+        memory: 6000Mi
+    # HACK
+    probes:
+      liveness:
+        enabled: false
+      readiness:
+        enabled: false
+      startup:
+        enabled: false

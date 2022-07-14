@@ -16,33 +16,87 @@ spec:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux-system
+
   install:
     createNamespace: true
     remediation:
       retries: 3
+
   upgrade:
     remediation:
       retries: 3
+
   # See https://github.com/k8s-at-home/charts/blob/master/charts/pod-gateway/values.yaml
   values:
     image:
       repository: ghcr.io/k8s-at-home/pod-gateway
       tag: v1.6.0
-    addons:
-      netshoot:
+
+    routed_namespaces:
+      - highseas
+
+    # publicPorts:
+    #   - hostname: deluge
+    #     IP: 10
+    #     ports:
+    #       - type: tcp
+    #         port: ${VPN_FORWARD_PORT_1}
+    #       - type: udp
+    #         port: ${VPN_FORWARD_PORT_1}
+
+    settings:
+      VPN_INTERFACE: wg0
+      VPN_BLOCK_OTHER_TRAFFIC: true
+      VPN_TRAFFIC_PORT: ${VPN_PORT}
+      VPN_LOCAL_CIDRS: '${NETWORK_K8S_CLUSTER_CIDR} ${NETWORK_K8S_SERVICE_CIDR} ${NETWORK_MANAGEMENT_CIDR}'
+      NOT_ROUTED_TO_GATEWAY_CIDRS: '${NETWORK_K8S_CLUSTER_CIDR} ${NETWORK_K8S_SERVICE_CIDR} ${NETWORK_MANAGEMENT_CIDR}'
+
+    webhook:
+      image:
+        repository: ghcr.io/k8s-at-home/gateway-admision-controller
+        tag: v3.5.0
+        pullPolicy: IfNotPresent
+      replicas: 1
+      strategy:
+        type: RollingUpdate
+      gatewayDefault: false
+      gatewayLabel: setGateway
+      gatewayAnnotation: setGateway
+
+    livenessProbe:
+      exec:
+        command:
+          - sh
+          - -c
+          - if [ $(curl -s https://ipinfo.io/region) = '${SECRET_VPN_REGION}' ]; then exit 0; else exit $?; fi
+      initialDelaySeconds: 30
+      periodSeconds: 60
+      failureThreshold: 1
+
+    persistence:
+      data:
         enabled: true
+        existingClaim: pod-gateway-data
+    addons:
       vpn:
         enabled: true
         type: wireguard
+
         wireguard:
           image:
             repository: ghcr.io/k8s-at-home/wireguard
             tag: v1.0.20210914
             pullPolicy: IfNotPresent
+
+        securityContext:
+          runAsUser: 568
+          runAsGroup: 568
+
         env:
           TZ: ${TIMEZONE}
           IPTABLES_BACKEND: nft
           KILLSWITCH: "false"
+
         configFile: |-
             [Interface]
             PrivateKey = ${SECRET_VPN_INTERFACE_PRIVATE_KEY}
@@ -55,6 +109,7 @@ spec:
             AllowedIPs = 0.0.0.0/0, ::/0
             Endpoint = ${SECRET_VPN_PEER_ENDPOINT}
             PersistentKeepalive = 25
+
         scripts:
           up: |-
             #!/bin/bash
@@ -64,18 +119,14 @@ spec:
             #!/bin/bash
             echo "down"
             ${SECRET_VPN_SCRIPT_DOWN}
+
         resources:
           requests:
             cpu: 100m
             memory: 128Mi
           limits:
             memory: 512Mi
-        securityContext:
-          runAsUser: 568
-          runAsGroup: 568
-          capabilities:
-            drop:
-              - SYS_MODULES
+
         networkPolicy:
           enabled: true
           egress:
@@ -86,58 +137,12 @@ spec:
                 - port: ${VPN_PORT}
                   protocol: UDP
             - to:
-                - namespaceSelector: {}
-                # - ipBlock:
-                #     cidr: ${SERVER_CIDR}
+                - ipBlock:
+                    cidr: ${NETWORK_K8S_CLUSTER_CIDR}
+                - ipBlock:
+                    cidr: ${NETWORK_K8S_SERVICE_CIDR}
+
         additionalVolumes:
           - name: data
             persistentVolumeClaim:
               claimName: pod-gateway-data
-        livenessProbe:
-          exec:
-            command:
-              - sh
-              - -c
-              - if [ $(curl -s https://ipinfo.io/region) = '${SECRET_VPN_REGION}' ]; then exit 0; else exit $?; fi
-          initialDelaySeconds: 30
-          periodSeconds: 60
-          failureThreshold: 1
-    DNS: ${SECRET_VPN_DNS}
-    settings:
-      VPN_INTERFACE: wg0
-      VXLAN_ID: 42
-      VXLAN_IP_NETWORK: "172.16.0"
-      VXLAN_GATEWAY_FIRST_DYNAMIC_IP: 20
-      VPN_BLOCK_OTHER_TRAFFIC: true
-      VPN_TRAFFIC_PORT: ${VPN_PORT}
-      VPN_LOCAL_CIDRS: ${SERVER_CIDR}
-      NOT_ROUTED_TO_GATEWAY_CIDRS: ${SERVER_CIDR}
-    publicPorts:
-      - hostname: deluge
-        IP: 10
-        ports:
-          - type: tcp
-            port: ${VPN_FORWARD_PORT_1}
-          - type: udp
-            port: ${VPN_FORWARD_PORT_1}
-    routed_namespaces:
-      - highseas
-    webhook:
-      image:
-        repository: ghcr.io/k8s-at-home/gateway-admision-controller
-        tag: v3.5.0
-        pullPolicy: IfNotPresent
-      replicas: 1
-      strategy:
-        type: RollingUpdate
-      gatewayDefault: false
-      gatewayLabel: setGateway
-      gatewayAnnotation: setGateway
-      namespaceSelector:
-        type: label
-        label: vpn-routed-gateway
-        custom: {}
-    persistence:
-      data:
-        enabled: true
-        existingClaim: pod-gateway-data

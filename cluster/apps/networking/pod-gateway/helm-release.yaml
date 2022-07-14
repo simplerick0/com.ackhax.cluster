@@ -16,15 +16,21 @@ spec:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
   # See https://github.com/k8s-at-home/charts/blob/master/charts/pod-gateway/values.yaml
   values:
     image:
       repository: ghcr.io/k8s-at-home/pod-gateway
       tag: v1.6.0
-    clusterName: ${CLUSTER_DOMAIN}
-    routed_namespaces:
-      - highseas
     addons:
+      netshoot:
+        enabled: true
       vpn:
         enabled: true
         type: wireguard
@@ -32,7 +38,9 @@ spec:
           image:
             repository: ghcr.io/k8s-at-home/wireguard
             tag: v1.0.20210914
+            pullPolicy: IfNotPresent
         env:
+          TZ: ${TIMEZONE}
           IPTABLES_BACKEND: nft
           KILLSWITCH: "false"
         configFile: |-
@@ -56,19 +64,35 @@ spec:
             #!/bin/bash
             echo "down"
             ${SECRET_VPN_SCRIPT_DOWN}
-        additionalVolumes:
-          - name: data
-            persistentVolumeClaim:
-              claimName: pod-gateway-data
-        additionalVolumeMounts:
-          - name: data
-            mountPath: /data
         resources:
           requests:
             cpu: 100m
             memory: 128Mi
           limits:
             memory: 512Mi
+        securityContext:
+          runAsUser: 568
+          runAsGroup: 568
+          capabilities:
+            drop:
+              - SYS_MODULES
+        networkPolicy:
+          enabled: true
+          egress:
+            - to:
+                - ipBlock:
+                    cidr: 0.0.0.0/0
+              ports:
+                - port: ${VPN_PORT}
+                  protocol: UDP
+            - to:
+                - namespaceSelector: {}
+                # - ipBlock:
+                #     cidr: ${SERVER_CIDR}
+        additionalVolumes:
+          - name: data
+            persistentVolumeClaim:
+              claimName: pod-gateway-data
         livenessProbe:
           exec:
             command:
@@ -78,31 +102,35 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 60
           failureThreshold: 1
-        # networkPolicy:
-        #   enabled: true
-        #   egress:
-        #     - to:
-        #         - ipBlock:
-        #             cidr: 0.0.0.0/0
-        #       ports:
-        #         - port: ${VPN_PORT}
-        #           protocol: UDP
-        #     - to:
-        #         - ipBlock:
-        #             cidr: ${SERVER_CIDR}
-        #         - ipBlock:
-        #             cidr: ${SERVER_CIDR}
+    DNS: ${SECRET_VPN_DNS}
     settings:
       DNS_LOCAL_CIDRS: ${LOCAL_DOMAIN}
       VPN_INTERFACE: wg0
+      VXLAN_ID: 42
+      VXLAN_IP_NETWORK: "172.16.0"
+      VXLAN_GATEWAY_FIRST_DYNAMIC_IP: 20
       VPN_BLOCK_OTHER_TRAFFIC: true
       VPN_TRAFFIC_PORT: ${VPN_PORT}
-      NOT_ROUTED_TO_GATEWAY_CIDRS: ${SERVER_CIDR}
       VPN_LOCAL_CIDRS: ${SERVER_CIDR}
+      NOT_ROUTED_TO_GATEWAY_CIDRS: ${SERVER_CIDR}
+    publicPorts:
+      - hostname: deluge
+        IP: 10
+        ports:
+          - type: tcp
+            port: ${VPN_FORWARD_PORT_1}
+          - type: udp
+            port: ${VPN_FORWARD_PORT_1}
+    routed_namespaces:
+      - highseas
     webhook:
       image:
         repository: ghcr.io/k8s-at-home/gateway-admision-controller
         tag: v3.5.0
+        pullPolicy: IfNotPresent
+      replicas: 1
+      strategy:
+        type: RollingUpdate
       gatewayDefault: false
       gatewayLabel: setGateway
       gatewayAnnotation: setGateway
@@ -112,3 +140,4 @@ spec:
       data:
         enabled: true
         existingClaim: pod-gateway-data
+    clusterName: ${CLUSTER_DOMAIN}

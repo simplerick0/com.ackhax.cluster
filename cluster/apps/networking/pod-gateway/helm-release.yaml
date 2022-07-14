@@ -92,23 +92,23 @@ spec:
                     cidr: ${SERVER_CIDR}
                 - ipBlock:
                     cidr: ${SERVER_CIDR}
-  settings:
-    DNS_LOCAL_CIDRS: ${LOCAL_DOMAIN}
-    VPN_INTERFACE: wg0
-    VPN_BLOCK_OTHER_TRAFFIC: true
-    VPN_TRAFFIC_PORT: ${VPN_PORT}
-    NOT_ROUTED_TO_GATEWAY_CIDRS: ${SERVER_CIDR}
-    VPN_LOCAL_CIDRS: ${SERVER_CIDR}
-  webhook:
-    image:
-      repository: ghcr.io/k8s-at-home/gateway-admision-controller
-      tag: v3.5.0
-    gatewayDefault: false
-    gatewayLabel: setGateway
-    gatewayAnnotation: setGateway
-    namespaceSelector:
-      label: highseas
-  persistence:
-    data:
-      enabled: true
-      existingClaim: pod-gateway-data
+    settings:
+      DNS_LOCAL_CIDRS: ${LOCAL_DOMAIN}
+      VPN_INTERFACE: wg0
+      VPN_BLOCK_OTHER_TRAFFIC: true
+      VPN_TRAFFIC_PORT: ${VPN_PORT}
+      NOT_ROUTED_TO_GATEWAY_CIDRS: ${SERVER_CIDR}
+      VPN_LOCAL_CIDRS: ${SERVER_CIDR}
+    webhook:
+      image:
+        repository: ghcr.io/k8s-at-home/gateway-admision-controller
+        tag: v3.5.0
+      gatewayDefault: false
+      gatewayLabel: setGateway
+      gatewayAnnotation: setGateway
+      namespaceSelector:
+        label: highseas
+    persistence:
+      data:
+        enabled: true
+        existingClaim: pod-gateway-data

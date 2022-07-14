@@ -78,20 +78,20 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 60
           failureThreshold: 1
-        networkPolicy:
-          enabled: true
-          egress:
-            - to:
-                - ipBlock:
-                    cidr: 0.0.0.0/0
-              ports:
-                - port: ${VPN_PORT}
-                  protocol: UDP
-            - to:
-                - ipBlock:
-                    cidr: ${SERVER_CIDR}
-                - ipBlock:
-                    cidr: ${SERVER_CIDR}
+        # networkPolicy:
+        #   enabled: true
+        #   egress:
+        #     - to:
+        #         - ipBlock:
+        #             cidr: 0.0.0.0/0
+        #       ports:
+        #         - port: ${VPN_PORT}
+        #           protocol: UDP
+        #     - to:
+        #         - ipBlock:
+        #             cidr: ${SERVER_CIDR}
+        #         - ipBlock:
+        #             cidr: ${SERVER_CIDR}
     settings:
       DNS_LOCAL_CIDRS: ${LOCAL_DOMAIN}
       VPN_INTERFACE: wg0

@@ -141,4 +141,3 @@ spec:
       data:
         enabled: true
         existingClaim: pod-gateway-data
-    clusterName: ${CLUSTER_DOMAIN}

@@ -76,15 +76,13 @@ spec:
       config:
         enabled: true
         existingClaim: qbittorrent-config
-      media:
-        enabled: true
-        existingClaim: qbittorrent-media
+      # media:
         # enabled: true
         # type: custom
         # volumeSpec:
         #   nfs:
-        #     server: 192.168.1.101
-        #     path: /srv/nfs
+        #     server: ${SECRET_NFS_SERVER_IP}
+        #     path: /POOL0/MEDIA/downloads
         # mountPath: /media
 
     resources:

@@ -5,4 +5,4 @@ namespace: networking
 resources:
   - config-pvc.yaml
   - helm-release.yaml
-  - network-policy.yaml
+  # - network-policy.yaml

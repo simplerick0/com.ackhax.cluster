@@ -32,7 +32,8 @@ spec:
       repository: ghcr.io/k8s-at-home/pod-gateway
       tag: v1.6.0
 
-    DNS:
+    DNS: 172.16.1.1
+    DNSPolicy: "None"
 
     routed_namespaces:
       - highseas
@@ -51,8 +52,10 @@ spec:
       VPN_INTERFACE: wg0
       VPN_BLOCK_OTHER_TRAFFIC: true
       VPN_TRAFFIC_PORT: ${VPN_PORT}
-      VPN_LOCAL_CIDRS: '${NETWORK_K8S_CLUSTER_CIDR} ${NETWORK_K8S_SERVICE_CIDR} ${NETWORK_MANAGEMENT_CIDR}'
-      NOT_ROUTED_TO_GATEWAY_CIDRS: '${NETWORK_K8S_CLUSTER_CIDR} ${NETWORK_K8S_SERVICE_CIDR} ${NETWORK_MANAGEMENT_CIDR}'
+      VPN_LOCAL_CIDRS: '172.16.0.0/12 ${NETWORK_K8S_CLUSTER_CIDR} ${NETWORK_K8S_SERVICE_CIDR} ${NETWORK_MANAGEMENT_CIDR}'
+      NOT_ROUTED_TO_GATEWAY_CIDRS: '172.16.0.0/12 ${NETWORK_K8S_CLUSTER_CIDR} ${NETWORK_K8S_SERVICE_CIDR} ${NETWORK_MANAGEMENT_CIDR}'
+      VXLAN_ID: 42
+      VXLAN_IP_NETWORK: 172.16.1
 
     webhook:
       image:
@@ -65,6 +68,8 @@ spec:
       gatewayDefault: false
       gatewayLabel: setGateway
       gatewayAnnotation: setGateway
+      namespaceSelector:
+        label: "vpn-routed-gateway"
 
     livenessProbe:
       exec:
@@ -81,6 +86,8 @@ spec:
         enabled: true
         existingClaim: pod-gateway-data
     addons:
+      netshoot:
+        enabled: true
       vpn:
         enabled: true
         type: wireguard

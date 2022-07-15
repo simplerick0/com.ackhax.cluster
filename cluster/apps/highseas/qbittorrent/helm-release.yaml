@@ -16,11 +16,28 @@ spec:
         name: k8s-at-home
         namespace: flux-system
       interval: 5m
-  values:
 
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    cleanupOnFail: true
+
+  dependsOn:
+    - name: vpn-gateway
+      namespace: networking
+
+  values:
     image:
       repository: ghcr.io/k8s-at-home/qbittorrent
       tag: v4.4.2
+
+    hostname: qb
 
     env:
       TZ: '${TIMEZONE}'
@@ -39,8 +56,7 @@ spec:
       bittorrent:
         enabled: true
         type: LoadBalancer
-        externalIPs:
-          - '${HIGHSEAS_QBITTORRENT_ADDRESS}'
+        loadBalancerIP: ${HIGHSEAS_QBITTORRENT_ADDRESS}
         # ports:
         #   bittorrent:
         #     enabled: true
@@ -91,11 +107,3 @@ spec:
         cpu: 500m
       limits:
         memory: 6000Mi
-    # HACK
-    probes:
-      liveness:
-        enabled: false
-      readiness:
-        enabled: false
-      startup:
-        enabled: false

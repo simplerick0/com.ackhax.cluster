@@ -42,12 +42,14 @@ spec:
       repository: ghcr.io/k8s-at-home/pod-gateway
       tag: v1.6.0
 
-    securityContext:
-      capabilities:
-        add:
-          - NET_ADMIN
-          - SYS_ADMIN
-          - sysctl net.ipv4.conf.all.src_valid_mark=1
+    DNS: 172.16.1.1
+
+    # securityContext:
+    #   capabilities:
+    #     add:
+    #       - NET_ADMIN
+    #       - SYS_ADMIN
+    #       - sysctl net.ipv4.conf.all.src_valid_mark=1
 
     updateStrategy: Recreate
 
@@ -66,14 +68,15 @@ spec:
     # clusterName: ${SECRET_DOMAIN}
 
     settings:
-      DNS_LOCAL_CIDRS: ${SECRET_DOMAIN}
+      # DNS_LOCAL_CIDRS: ${SECRET_DOMAIN}
       VPN_INTERFACE: wg0
       VPN_BLOCK_OTHER_TRAFFIC: true
       VPN_TRAFFIC_PORT: ${VPN_PORT}
-      VPN_LOCAL_CIDRS: '${NETWORK_K8S_CLUSTER_CIDR} ${NETWORK_K8S_SERVICE_CIDR} ${NETWORK_SERVER_CIDR}'
-      NOT_ROUTED_TO_GATEWAY_CIDRS: '${NETWORK_K8S_CLUSTER_CIDR} ${NETWORK_K8S_SERVICE_CIDR} ${NETWORK_SERVER_CIDR}'
-      VXLAN_ID: 42
-      VXLAN_IP_NETWORK: "172.16.0"
+      VPN_LOCAL_CIDRS: '172.16.0.0/12 ${NETWORK_K8S_CLUSTER_CIDR} ${NETWORK_K8S_SERVICE_CIDR} ${NETWORK_SERVER_CIDR}'
+      NOT_ROUTED_TO_GATEWAY_CIDRS: '172.16.0.0/12 ${NETWORK_K8S_CLUSTER_CIDR} ${NETWORK_K8S_SERVICE_CIDR} ${NETWORK_SERVER_CIDR}'
+      VXLAN_GATEWAY_FIRST_DYNAMIC_IP: 20
+      VXLAN_ID: 43
+      VXLAN_IP_NETWORK: "172.16.1"
 
     webhook:
       image:
@@ -86,8 +89,6 @@ spec:
       gatewayDefault: false
       gatewayLabel: setGateway
       gatewayAnnotation: setGateway
-      namespaceSelector:
-        label: "vpn-routed-gateway"
 
     persistence:
       data:
@@ -106,10 +107,14 @@ spec:
             pullPolicy: IfNotPresent
           securityContext:
             capabilities:
-              add:
-                - NET_ADMIN
-                - SYS_ADMIN
-                - sysctl net.ipv4.conf.all.src_valid_mark=1
+              runAsUser: 568
+              runAsGroup: 568
+              drop:
+                - "SYS_MODULE"
+              # add:
+              #   - NET_ADMIN
+              #   - SYS_ADMIN
+              #   - sysctl net.ipv4.conf.all.src_valid_mark=1
 
         env:
           TZ: ${TIMEZONE}
@@ -143,27 +148,6 @@ spec:
           initialDelaySeconds: 45
           periodSeconds: 120
           failureThreshold: 1
-
-        networkPolicy:
-          enabled: true
-          egress:
-            - to:
-                - ipBlock:
-                    cidr: 0.0.0.0/0
-              ports:
-                - port: ${VPN_PORT}
-                  protocol: UDP
-                - port: 53
-                  protocol: UDP
-                - port: 53
-                  protocol: TCP
-            - to:
-                - ipBlock:
-                    cidr: ${NETWORK_K8S_CLUSTER_CIDR}
-                - ipBlock:
-                    cidr: ${NETWORK_K8S_SERVICE_CIDR}
-                - ipBlock:
-                    cidr: ${NETWORK_SERVER_CIDR}
 
         additionalVolumes:
           - name: data

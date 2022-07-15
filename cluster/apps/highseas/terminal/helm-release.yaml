@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         app: terminal
+        setGateway: "true"
     spec:
       containers:
         - name: terminal

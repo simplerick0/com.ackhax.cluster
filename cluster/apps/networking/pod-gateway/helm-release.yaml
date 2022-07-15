@@ -156,3 +156,20 @@ spec:
           - name: data
             persistentVolumeClaim:
               claimName: pod-gateway-data
+
+        networkPolicy:
+          enabled: true
+
+          egress:
+            - to:
+                - ipBlock:
+                    cidr: 0.0.0.0/0
+            - to:
+                - ipBlock:
+                    cidr: 172.16.0.0/12
+                - ipBlock:
+                    cidr: ${NETWORK_K8S_CLUSTER_CIDR}
+                - ipBlock:
+                    cidr: ${NETWORK_K8S_SERVICE_CIDR}
+                - ipBlock:
+                    cidr: ${NETWORK_SERVER_CIDR}

@@ -63,7 +63,7 @@ spec:
     #       - type: udp
     #         port: ${VPN_FORWARD_PORT_1}
 
-    clusterName: ${SECRET_DOMAIN}
+    # clusterName: ${SECRET_DOMAIN}
 
     settings:
       DNS_LOCAL_CIDRS: ${SECRET_DOMAIN}

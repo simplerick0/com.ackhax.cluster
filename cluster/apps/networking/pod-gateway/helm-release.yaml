@@ -44,13 +44,6 @@ spec:
 
     DNS: 172.16.1.1
 
-    # securityContext:
-    #   capabilities:
-    #     add:
-    #       - NET_ADMIN
-    #       - SYS_ADMIN
-    #       - sysctl net.ipv4.conf.all.src_valid_mark=1
-
     updateStrategy: Recreate
 
     routed_namespaces:
@@ -65,10 +58,8 @@ spec:
     #       - type: udp
     #         port: ${VPN_FORWARD_PORT_1}
 
-    # clusterName: ${SECRET_DOMAIN}
-
     settings:
-      # DNS_LOCAL_CIDRS: ${SECRET_DOMAIN}
+      DNS_LOCAL_CIDRS: ${SECRET_DOMAIN}
       VPN_INTERFACE: wg0
       VPN_BLOCK_OTHER_TRAFFIC: true
       VPN_TRAFFIC_PORT: ${VPN_PORT}
@@ -114,10 +105,6 @@ spec:
             capabilities:
               drop:
                 - "SYS_MODULE"
-              # add:
-              #   - NET_ADMIN
-              #   - SYS_ADMIN
-              #   - sysctl net.ipv4.conf.all.src_valid_mark=1
 
         env:
           TZ: ${TIMEZONE}

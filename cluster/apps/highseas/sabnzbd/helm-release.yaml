@@ -1,0 +1,123 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: sabnzbd
+  namespace: highseas
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: sabnzbd
+      version: 9.3.2
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux-system
+      interval: 5m
+
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    cleanupOnFail: true
+
+  dependsOn:
+    - name: vpn-gateway
+      namespace: networking
+
+  values:
+    image:
+      repository: ghcr.io/k8s-at-home/sabnzbd
+      tag: v4.4.2
+
+    hostname: sab
+
+    env:
+      TZ: '${TIMEZONE}'
+
+    podAnnotations:
+      setGateway: 'true'
+
+    # TODO: Further testing required, tracker host was found when this was added. Pretty sure
+    dnsConfig:
+      options:
+        - name: ndots
+          value: "1"
+
+    settings:
+      automaticPortSetup: false
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: 'nginx'
+        annotations:
+          cert-manager.io/cluster-issuer: 'letsencrypt-production'
+          hajimari.io/enable: 'true'
+          hajimari.io/icon: 'cloud-download'
+          nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+        hosts:
+          - host: 'sab.${SECRET_DOMAIN}'
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - 'sab.${SECRET_DOMAIN}'
+            secretName: 'sabnzbd-tls'
+      api:
+        enabled: true
+        ingressClassName: 'nginx'
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+        hosts:
+          - host: 'sab.${SECRET_DOMAIN}'
+            paths:
+              - path: /api
+                pathType: Prefix
+        tls:
+          - hosts:
+              - 'sab.${SECRET_DOMAIN}'
+            secretName: 'sabnzbd-tls'
+
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: "OnRootMismatch"
+      supplementalGroups:
+        - 100
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: sabnzbd-config
+      downloads:
+        enabled: true
+        existingClaim: sabnzbd-downloads
+      # media:
+      #   enabled: true
+      #   type: nfs
+      #   server: "nas.${SECRET_NFS_SERVER_IP}"
+      #   path: /POOL0/MEDIA/downloads
+      #   mountPath: /media
+
+    resources:
+      requests:
+        memory: 250Mi
+        cpu: 500m
+      limits:
+        memory: 6000Mi

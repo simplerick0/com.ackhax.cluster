@@ -4,6 +4,9 @@ kind: HelmRelease
 metadata:
   name: qbittorrent
   namespace: highseas
+dnsConfig:
+  options:
+    ndots: 1
 spec:
   interval: 5m
   chart:

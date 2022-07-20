@@ -8,4 +8,5 @@ resources:
   - kube-system
   - networking
   - security
+  - storage
   # - system-upgrade

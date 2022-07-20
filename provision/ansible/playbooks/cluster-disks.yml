@@ -1,0 +1,56 @@
+---
+- hosts:
+    - master
+    - worker
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  pre_tasks:
+    - name: Pausing for 5 seconds...
+      ansible.builtin.pause:
+        seconds: 5
+  tasks:
+    - name: Verify password length
+      ansible.builtin.assert:
+        that: "{{ luks_passphrase | length }} >= 8"
+      no_log: true
+
+    # TODO: Make disks a variable list of devices, mount points, and names
+    - name: Create LVM partition on /dev/sdb
+      community.general.parted:
+        device: /dev/sdb
+        number: 1
+        flags: [lvm]
+        state: present
+        fs_type: ext4
+
+    - name: Encrypt and open /dev/sdb1
+      community.crypto.luks_device:
+        device: /dev/sdb1
+        state: opened
+        name: disk0
+        passphrase: "{{ luks_passphrase }}"
+      no_log: true
+
+    - name: Create ext4 filesystem on disk0
+      ansible.builtin.filesystem:
+        fstype: ext4
+        dev: /dev/mapper/disk0
+
+    - name: Make sure mount point exists
+      ansible.builtin.file:
+        path: /mnt/disk0
+        state: directory
+
+    - name: Mount /dev/mapper/disk0
+      ansible.posix.mount:
+        path: /mnt/disk0
+        src: /dev/mapper/disk0
+        fstype: ext4
+        state: mounted
+
+  vars_prompt:
+    - name: luks_passphrase
+      prompt: "Passphrase for disk encryption"
+      private: true
+      confirm: true

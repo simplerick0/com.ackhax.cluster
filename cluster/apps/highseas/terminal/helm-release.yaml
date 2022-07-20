@@ -6,9 +6,6 @@ metadata:
   namespace: highseas
   labels:
     app: terminal
-dnsConfig:
-  options:
-    ndots: 1
 spec:
   replicas: 1
   selector:

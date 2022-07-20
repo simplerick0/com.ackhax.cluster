@@ -32,10 +32,6 @@ spec:
     - name: vpn-gateway
       namespace: networking
 
-  dnsConfig:
-    options:
-      ndots: 1
-
   values:
     image:
       repository: ghcr.io/k8s-at-home/qbittorrent

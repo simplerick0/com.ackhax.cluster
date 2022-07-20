@@ -59,7 +59,7 @@ spec:
     #         port: ${VPN_FORWARD_PORT_1}
 
     settings:
-      # DNS_LOCAL_CIDRS: ${SECRET_DOMAIN}
+      DNS_LOCAL_CIDRS: ${SECRET_DOMAIN}
       VPN_INTERFACE: wg0
       VPN_BLOCK_OTHER_TRAFFIC: true
       VPN_TRAFFIC_PORT: ${VPN_PORT}

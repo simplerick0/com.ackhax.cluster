@@ -45,6 +45,10 @@ spec:
     podAnnotations:
       setGateway: 'true'
 
+    podDnsConfig:
+      options:
+        ndots: "1"
+
     settings:
       automaticPortSetup: false
 

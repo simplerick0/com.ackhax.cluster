@@ -45,6 +45,7 @@ spec:
     podAnnotations:
       setGateway: 'true'
 
+    # TODO: Further testing required, tracker host was found when this was added. Pretty sure
     dnsConfig:
       options:
         - name: ndots
@@ -97,6 +98,9 @@ spec:
       config:
         enabled: true
         existingClaim: qbittorrent-config
+      downloads:
+        enabled: true
+        existingClaim: qbittorrent-downloads
       # media:
       #   enabled: true
       #   type: nfs

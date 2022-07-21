@@ -35,7 +35,7 @@ spec:
   values:
     image:
       repository: ghcr.io/k8s-at-home/sabnzbd
-      tag: v4.4.2
+      tag: v3.5.3
 
     hostname: sab
 

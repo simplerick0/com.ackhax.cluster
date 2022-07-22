@@ -71,9 +71,6 @@ spec:
       config:
         enabled: true
         existingClaim: sonarr-config
-      downloads:
-        enabled: true
-        existingClaim: sabnzbd-downloads
       media:
         enabled: true
         type: nfs

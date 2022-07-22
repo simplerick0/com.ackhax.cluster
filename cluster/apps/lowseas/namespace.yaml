@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: highseas
+  name: lowseas
   labels:
     vpn-routed-gateway: "true"
     kustomize.toolkit.fluxcd.io/prune: disabled

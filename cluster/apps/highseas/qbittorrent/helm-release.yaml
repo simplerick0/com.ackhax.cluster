@@ -105,12 +105,12 @@ spec:
       downloads:
         enabled: true
         existingClaim: qbittorrent-downloads
-      # media:
-      #   enabled: true
-      #   type: nfs
-      #   server: "nas.${SECRET_NFS_SERVER_IP}"
-      #   path: /POOL0/MEDIA/downloads
-      #   mountPath: /media
+      media:
+        enabled: true
+        type: nfs
+        server: "${SECRET_NFS_SERVER_IP}"
+        path: /POOL0/MEDIA/downloads
+        mountPath: /media
 
     resources:
       requests:

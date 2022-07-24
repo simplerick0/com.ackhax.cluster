@@ -40,7 +40,7 @@ spec:
 
     env:
       TZ: '${TIMEZONE}'
-      FLOOD_OPTION_RUNDIR: /data
+      FLOOD_OPTION_RUNDIR: /config
       FLOOD_OPTION_AUTH: none
       FLOOD_OPTION_QBURL: http://qbittorrent:8080
       FLOOD_OPTION_QBUSER: "${SECRET_SERVICE_USER}"

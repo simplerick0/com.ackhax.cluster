@@ -108,12 +108,12 @@ spec:
       downloads:
         enabled: true
         existingClaim: sabnzbd-downloads
-      # media:
-      #   enabled: true
-      #   type: nfs
-      #   server: "nas.${SECRET_NFS_SERVER_IP}"
-      #   path: /POOL0/MEDIA/downloads
-      #   mountPath: /media
+      media:
+        enabled: true
+        type: nfs
+        server: "${SECRET_NFS_SERVER_IP}"
+        path: "${SECRET_NFS_SERVER_MEDIA_PATH}"
+        mountPath: /media
 
     resources:
       requests:

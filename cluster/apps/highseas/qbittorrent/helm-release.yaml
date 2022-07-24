@@ -109,7 +109,7 @@ spec:
         enabled: true
         type: nfs
         server: "${SECRET_NFS_SERVER_IP}"
-        path: /mnt/ACKHAX/MEDIA
+        path: "${SECRET_NFS_SERVER_MEDIA_PATH}"
         mountPath: /media
 
     resources:

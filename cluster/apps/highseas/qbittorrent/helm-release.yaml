@@ -104,7 +104,7 @@ spec:
         existingClaim: qbittorrent-config
       downloads:
         enabled: true
-        existingClaim: qbittorrent-downloads
+        existingClaim: highseas-downloads
       media:
         enabled: true
         type: nfs

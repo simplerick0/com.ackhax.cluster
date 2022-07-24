@@ -107,7 +107,7 @@ spec:
         existingClaim: sabnzbd-config
       downloads:
         enabled: true
-        existingClaim: sabnzbd-downloads
+        existingClaim: highseas-downloads
       media:
         enabled: true
         type: nfs

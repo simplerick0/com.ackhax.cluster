@@ -48,7 +48,7 @@ spec:
       TZ: '${TIMEZONE}'
       FLOOD_OPTION_RUNDIR: /config
       FLOOD_OPTION_AUTH: none
-      FLOOD_OPTION_QBURL: http://qbittorrent:8080
+      FLOOD_OPTION_QBURL: https://qb.${SECRET_DOMAIN}
       FLOOD_OPTION_QBUSER: "${SECRET_SERVICE_USER}"
       FLOOD_OPTION_QBPASS: "${SECRET_SERVICE_PASS}"
 

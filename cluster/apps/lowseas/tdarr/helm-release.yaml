@@ -27,19 +27,24 @@ spec:
       TZ: ${TZ}
       serverIP: 0.0.0.0
       ffmpegPath: /usr/bin/ffmpeg
-      PGID: 65537
     persistence:
+      config:
+        enabled: true
+        mountPath: /app/configs
+        existingClaim: tdarr-config
       data:
         enabled: true
         mountPath: /app/server
-        existingClaim: tdarr-config
+        existingClaim: tdarr-data
       shared:
         enabled: true
         type: emptyDir
         mountPath: /shared
       media:
         enabled: true
-        type: nfs-media
+        type: nfs
+        server: "${SECRET_NFS_SERVER_IP}"
+        path: "${SECRET_NFS_SERVER_MEDIA_PATH}"
         mountPath: /media
     service:
       main:

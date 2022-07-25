@@ -5,3 +5,4 @@ namespace: lowseas
 resources:
   - config-pvc.yaml
   - helm-release.yaml
+  - service.yaml

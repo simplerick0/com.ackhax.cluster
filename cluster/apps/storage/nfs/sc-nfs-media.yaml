@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-media-pv
+spec:
+  storageClassName: nfs-media
+  capacity:
+    storage: 1Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: "${SECRET_NFS_SERVER_IP}"
+    path: "${SECRET_NFS_SERVER_MEDIA_PATH}"
+  mountOptions:
+    - nfsvers=4
+    - tcp
+    - intr
+    - soft
+    - noatime
+    - nodiratime
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-media-pvc
+  namespace: storage
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-media
+  resources:
+    requests:
+      storage: 1Mi

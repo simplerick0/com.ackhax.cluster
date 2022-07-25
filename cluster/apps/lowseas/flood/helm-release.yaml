@@ -38,6 +38,12 @@ spec:
       tag: 4.7.0
       pullPolicy: IfNotPresent
 
+    # TODO: Further testing required, tracker host was found when this was added. Pretty sure
+    dnsConfig:
+      options:
+        - name: ndots
+          value: "1"
+
     env:
       TZ: '${TIMEZONE}'
       FLOOD_OPTION_RUNDIR: /config

@@ -36,7 +36,22 @@ spec:
         externalTrafficPolicy: Local
     ingress:
       main:
-        enabled: false
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          cert-manager.io/cluster-issuer: letsencrypt-production
+          hajimari.io/enable: 'true'
+          hajimari.io/icon: 'home'
+          nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+        hosts:
+          - host: hass.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - hass.${SECRET_DOMAIN}
+            secretName: "hass-tls"
     probes:
       liveness:
         enabled: false

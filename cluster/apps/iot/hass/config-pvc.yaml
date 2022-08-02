@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: hass-config
-  namespace: home
+  namespace: iot
 spec:
   accessModes:
     - ReadWriteOnce

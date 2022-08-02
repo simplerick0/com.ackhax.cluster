@@ -5,6 +5,7 @@ resources:
   - default
   - flux-system
   - highseas
+  - iot
   - kube-system
   - lowseas
   - networking

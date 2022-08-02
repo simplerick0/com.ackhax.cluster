@@ -1,0 +1,58 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: pihole
+  namespace: networking
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: pihole
+      version: 2.9.0
+      sourceRef:
+        kind: HelmRepository
+        name: pihole-charts
+        namespace: flux-system
+      interval: 5m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    image:
+      repository: pihole/pihole
+      tag: "2022.07"
+    serviceWeb:
+      loadBalancerIP: "${NETWORK_PIHOLE_ADDRESS}"
+      annotations:
+        metallb.universe.tf/allow-shared-ip: pihole-svc
+      type: LoadBalancer
+    serviceDns:
+      loadBalancerIP: "${NETWORK_PIHOLE_ADDRESS}"
+      annotations:
+        metallb.universe.tf/allow-shared-ip: pihole-svc
+      type: LoadBalancer
+    dnsmasq:
+      # these won't actually show up in the PiHole gui, but they should be added to the dnsmasq config
+      customDnsEntries:
+        - address=/echo-server.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/flood.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/flux-receiver.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/hajimari.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/longhorn.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/pihole.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/qb.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/sab.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/sonarr.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/tdarr.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/ombi.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/hass.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/hass-config.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+    persistentVolumeClaim:
+      enabled: true
+      existingClaim: pihole-config
+    adminPassword: "${SECRET_PIHOLE_ADMIN_PASS}"

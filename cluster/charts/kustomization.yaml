@@ -12,5 +12,6 @@ resources:
   - longhorn.yaml
   - metallb.yaml
   - metrics-server.yaml
+  - pihole.yaml
   - stakater.yaml
   - weaveworks-kured.yaml

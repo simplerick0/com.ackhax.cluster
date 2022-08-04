@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - hass
-  - iot
+  - esphome

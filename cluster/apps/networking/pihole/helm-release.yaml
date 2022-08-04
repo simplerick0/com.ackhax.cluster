@@ -40,6 +40,7 @@ spec:
       # these won't actually show up in the PiHole gui, but they should be added to the dnsmasq config
       customDnsEntries:
         - address=/echo-server.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/esphome.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
         - address=/flood.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
         - address=/flux-receiver.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
         - address=/hajimari.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}

@@ -18,8 +18,8 @@ spec:
       interval: 5m
   values:
     env:
-      PGADMIN_DEFAULT_EMAIL: ${SECRET_PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${SECRET_PGADMIN_PASS}
+      PGADMIN_DEFAULT_EMAIL: '${SECRET_FAMILY_PGADMIN_EMAIL}'
+      PGADMIN_DEFAULT_PASSWORD: '${SECRET_FAMILY_PGADMIN_PASS}'
 
     strategy:
       type: Recreate
@@ -44,3 +44,4 @@ spec:
       tls:
         - hosts:
             - "pgadmin-fam.${SECRET_DOMAIN}"
+          secretName: "pgadmin-fam-tls"

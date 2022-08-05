@@ -43,6 +43,7 @@ spec:
         - address=/esphome.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
         - address=/flood.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
         - address=/flux-receiver.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
+        - address=/food.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
         - address=/hajimari.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
         - address=/longhorn.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}
         - address=/pihole.${SECRET_DOMAIN}/${METALLB_INGRESS_ADDR}

@@ -1,0 +1,70 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: recipes
+  namespace: family
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: recipes
+      version: 6.6.2
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux-system
+      interval: 5m
+  values:
+    image:
+      repository: vabene1111/recipes
+      tag: 1.3.3
+      pullPolicy: IfNotPresent
+
+    env:
+      TIMEZONE: ${TIMEZONE}
+      SECRET_KEY: ${SECRET_FOOD_SECRET_KEY}
+
+    sidecar:
+      image:
+        repository: nginx
+        tag: 1.23.1
+        pullPolicy: IfNotPresent
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: food-config
+      media:
+        enabled: true
+        existingClaim: food-data
+        mountPath: /opt/recipes/mediafiles
+      static:
+        enabled: true
+        type: emptyDir
+        mountPath: /opt/recipes/staticfiles
+
+    service:
+      main:
+        annotations:
+          prometheus.io/probe: "true"
+          prometheus.io/protocol: http
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: "nginx"
+        annotations:
+          cert-manager.io/cluster-issuer: 'letsencrypt-production'
+          hajimari.io/enable: 'true'
+          hajimari.io/icon: 'food'
+          nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+        hosts:
+          - host: "food.${SECRET_CLUSTER_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - "food.${SECRET_CLUSTER_DOMAIN}"

@@ -7,6 +7,7 @@ resources:
   - highseas
   - iot
   - kube-system
+  - family
   - lowseas
   - networking
   - security

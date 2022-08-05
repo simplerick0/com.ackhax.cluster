@@ -51,7 +51,7 @@ spec:
       TIMEZONE: ${TIMEZONE}
       SECRET_KEY: ${SECRET_RECIPES_SECRET_KEY}
       DB_ENGINE: django.db.backends.postgresql
-      POSTGRES_HOST: psql-family.data.svc.cluster.local.
+      POSTGRES_HOST: psql-family-postgresql
       POSTGRES_PORT: 5432
       POSTGRES_DB: recipes
       POSTGRES_USER: recipes

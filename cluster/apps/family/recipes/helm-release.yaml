@@ -85,3 +85,4 @@ spec:
         tls:
           - hosts:
               - "food.${SECRET_DOMAIN}"
+            secretName: "food-tls"

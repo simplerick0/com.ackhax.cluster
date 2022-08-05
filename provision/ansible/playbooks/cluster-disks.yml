@@ -32,6 +32,8 @@
         passphrase: "{{ luks_passphrase }}"
       no_log: true
 
+      # TODO: Add sdb1 disk0 to crypttab to decrypt at boot
+
     - name: Create ext4 filesystem on disk0
       ansible.builtin.filesystem:
         fstype: ext4

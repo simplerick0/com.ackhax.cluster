@@ -16,6 +16,18 @@ spec:
         name: k8s-at-home
         namespace: flux-system
       interval: 5m
+
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    cleanupOnFail: true
+
   values:
     image:
       repository: vabene1111/recipes

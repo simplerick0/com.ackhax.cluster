@@ -30,6 +30,12 @@ spec:
 
     ingress:
       enabled: true
+      ingressClassName: "nginx"
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-production"
+        hajimari.io/enable: "true"
+        hajimari.io/appName: "pgadmin-family"
+        nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
       hosts:
         - host: "pgadmin-fam.${SECRET_DOMAIN}"
           paths:
@@ -38,13 +44,3 @@ spec:
       tls:
         - hosts:
             - "pgadmin-fam.${SECRET_DOMAIN}"
-  postRenderers:
-    - kustomize:
-        patchesJson6902:
-          - target:
-              kind: Ingress
-              name: pgadmin-pgadmin4
-            patch:
-              - op: add
-                path: /spec/ingressClassName
-                value: nginx

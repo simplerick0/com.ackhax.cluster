@@ -28,6 +28,10 @@ spec:
       remediateLastFailure: true
     cleanupOnFail: true
 
+  dependsOn:
+    - name: psql-family
+      namespace: family
+
   values:
     image:
       repository: vabene1111/recipes
@@ -36,16 +40,22 @@ spec:
 
     env:
       DEBUG: 1
-      EMAIL_HOST: "${SECRET_FOOD_EMAIL_HOST}"
+      EMAIL_HOST: "${SECRET_RECIPES_EMAIL_HOST}"
       EMAIL_PORT: 587
-      EMAIL_HOST_PASSWORD: "${SECRET_FOOD_EMAIL_KEY}"
-      EMAIL_HOST_USER: "${SECRET_FOOD_EMAIL_USER}"
+      EMAIL_HOST_PASSWORD: "${SECRET_RECIPES_EMAIL_KEY}"
+      EMAIL_HOST_USER: "${SECRET_RECIPES_EMAIL_USER}"
       EMAIL_USE_TLS: 1
       EMAIL_USE_SSL: 0
-      DEFAULT_FROM_EMAIL: "${SECRET_FOOD_EMAIL_ADDR}"
+      DEFAULT_FROM_EMAIL: "${SECRET_RECIPES_EMAIL_ADDR}"
       ACCOUNT_EMAIL_SUBJECT_PREFIX: "[Recipes]"
       TIMEZONE: ${TIMEZONE}
-      SECRET_KEY: ${SECRET_FOOD_SECRET_KEY}
+      SECRET_KEY: ${SECRET_RECIPES_SECRET_KEY}
+      DB_ENGINE: django.db.backends.postgresql
+      POSTGRES_HOST: psql-family.data.svc.cluster.local.
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: recipes
+      POSTGRES_USER: recipes
+      POSTGRES_PASSWORD: ${SECRET_RECIPES_DB_PASSWORD}
 
     sidecar:
       image:
@@ -57,11 +67,6 @@ spec:
       config:
         enabled: true
         existingClaim: food-config
-      database:
-        enabled: true
-        existingClaim: food-database
-        mountPath: /opt/recipes/db.sqlite3
-        subPath: db.sqlite3
       media:
         enabled: true
         existingClaim: food-media

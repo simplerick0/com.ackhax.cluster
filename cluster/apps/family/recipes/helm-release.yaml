@@ -35,6 +35,7 @@ spec:
       pullPolicy: IfNotPresent
 
     env:
+      DEBUG: 1
       EMAIL_HOST: "${SECRET_FOOD_EMAIL_HOST}"
       EMAIL_PORT: 587
       EMAIL_HOST_PASSWORD: "${SECRET_FOOD_EMAIL_KEY}"
@@ -56,9 +57,14 @@ spec:
       config:
         enabled: true
         existingClaim: food-config
+      database:
+        enabled: true
+        existingClaim: food-database
+        mountPath: /opt/recipes/db.sqlite3
+        subPath: db.sqlite3
       media:
         enabled: true
-        existingClaim: food-data
+        existingClaim: food-media
         mountPath: /opt/recipes/mediafiles
       static:
         enabled: true

@@ -35,6 +35,9 @@ spec:
       pullPolicy: IfNotPresent
 
     env:
+      EMAIL_HOST: "${SECRET_FOOD_EMAIL_HOST}"
+      EMAIL_HOST_PASSWORD: "${SECRET_FOOD_EMAIL_KEY}"
+      EMAIL_HOST_USER: "${SECRET_FOOD_EMAIL_USER}"
       TIMEZONE: ${TIMEZONE}
       SECRET_KEY: ${SECRET_FOOD_SECRET_KEY}
 

@@ -13,5 +13,6 @@ resources:
   - metallb.yaml
   - metrics-server.yaml
   - pihole.yaml
+  - runix.yaml
   - stakater.yaml
   - weaveworks-kured.yaml

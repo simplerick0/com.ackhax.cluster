@@ -7,4 +7,4 @@ resources:
   - flood
   - ombi
   - sonarr
-  - tdarr
+  # - tdarr

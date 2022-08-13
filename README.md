@@ -220,6 +220,13 @@ In order to use Terraform and `cert-manager` with the Cloudflare DNS challenge y
     task ansible:prepare
     ```
 
+6. Run the Ansible disk playbook to
+
+    ```sh
+    task ansible:prepare
+    ```
+
+
 6. Reboot the nodes
 
     ```sh

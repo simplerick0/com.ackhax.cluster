@@ -27,12 +27,12 @@ spec:
       repository: pihole/pihole
       tag: "2022.07"
     serviceWeb:
-      loadBalancerIP: "${NETWORK_PIHOLE_ADDRESS}"
+      loadBalancerIP: "${SECRET_NETWORK_PIHOLE_ADDRESS}"
       annotations:
         metallb.universe.tf/allow-shared-ip: pihole-svc
       type: LoadBalancer
     serviceDns:
-      loadBalancerIP: "${NETWORK_PIHOLE_ADDRESS}"
+      loadBalancerIP: "${SECRET_NETWORK_PIHOLE_ADDRESS}"
       annotations:
         metallb.universe.tf/allow-shared-ip: pihole-svc
       type: LoadBalancer

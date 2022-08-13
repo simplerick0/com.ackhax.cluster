@@ -90,7 +90,7 @@ spec:
           cert-manager.io/cluster-issuer: 'letsencrypt-production'
           hajimari.io/enable: 'true'
           hajimari.io/icon: 'food'
-          nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+          nginx.ingress.kubernetes.io/whitelist-source-range: "${SECRET_NETWORK_INGRESS_WHITELIST}"
         hosts:
           - host: "food.${SECRET_DOMAIN}"
             paths:

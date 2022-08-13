@@ -74,7 +74,7 @@ spec:
             secretName: "vaultwarden-tls"
     resources:
       requests:
-        memory: 500Mi
-        cpu: 200m
+        memory: 64Mi
+        cpu: 50m
       limits:
-        memory: 2000Mi
+        memory: 256Mi

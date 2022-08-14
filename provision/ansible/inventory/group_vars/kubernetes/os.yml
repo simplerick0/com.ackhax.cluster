@@ -17,6 +17,7 @@ packages:
   - iscsi-initiator-utils
   - lm_sensors
   - nano
+  - nfs-utils
   - nvme-cli
   - socat
   - python3-libselinux

@@ -18,13 +18,11 @@ spec:
       interval: 5m
 
   install:
-    disableWait: true
     createNamespace: true
     remediation:
       retries: 3
 
   upgrade:
-    disableWait: true
     remediation:
       retries: 3
       remediateLastFailure: true
@@ -107,12 +105,12 @@ spec:
       downloads:
         enabled: true
         existingClaim: highseas-downloads
-      media:
-        enabled: true
-        type: nfs
-        server: "${SECRET_NFS_SERVER_IP}"
-        path: "${SECRET_NFS_SERVER_MEDIA_PATH}"
-        mountPath: /media
+      # media:
+      #   enabled: true
+      #   type: nfs
+      #   server: "${SECRET_NFS_SERVER_IP}"
+      #   path: "${SECRET_NFS_SERVER_MEDIA_PATH}"
+      #   mountPath: /media
 
     resources:
       requests:

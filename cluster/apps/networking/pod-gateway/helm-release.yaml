@@ -86,7 +86,7 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: pod-gateway-config
+        existingClaim: pod-gateway-config-v2
 
     addons:
       vpn:

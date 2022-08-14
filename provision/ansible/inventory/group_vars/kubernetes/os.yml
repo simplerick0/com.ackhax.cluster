@@ -16,6 +16,7 @@ packages:
   - ipvsadm
   - iscsi-initiator-utils
   - lm_sensors
+  - lsof
   - nano
   - nfs-utils
   - nvme-cli

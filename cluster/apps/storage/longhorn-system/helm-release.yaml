@@ -18,7 +18,9 @@ spec:
       interval: 5m
   values:
     persistence:
+      defaultClass: true
       defaultClassReplicaCount: 2
+      reclaimPolicy: Retain
     defaultSettings:
       # backupTarget: s3://longhorn@minio/backups
       # backupTargetCredentialSecret: longhorn-backup

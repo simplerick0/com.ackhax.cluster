@@ -104,7 +104,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: sabnzbd-config-v2
+        existingClaim: sabnzbd-config
       downloads:
         enabled: true
         existingClaim: highseas-downloads

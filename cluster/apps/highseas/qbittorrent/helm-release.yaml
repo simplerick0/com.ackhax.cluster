@@ -101,16 +101,16 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: qbittorrent-config-v2
+        existingClaim: qbittorrent-config
       downloads:
         enabled: true
         existingClaim: highseas-downloads
-      # media:
-      #   enabled: true
-      #   type: nfs
-      #   server: "${SECRET_NFS_SERVER_IP}"
-      #   path: "${SECRET_NFS_SERVER_MEDIA_PATH}"
-      #   mountPath: /media
+      media:
+        enabled: true
+        type: nfs
+        server: "${SECRET_NFS_SERVER_IP}"
+        path: "${SECRET_NFS_SERVER_MEDIA_PATH}"
+        mountPath: /media
 
     resources:
       requests:

@@ -24,9 +24,14 @@ spec:
     defaultSettings:
       # backupTarget: s3://longhorn@minio/backups
       # backupTargetCredentialSecret: longhorn-backup
-      defaultDataPath: /mnt/disk0/longhorn
+      createDefaultDiskLabeledNodes: true
+      defaulDataLocality: best-effort
+      nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+      concurrentAutomaticEngineUpgradePerNodeLimit: 1
+      storageMinimalAvailablePercentage: 10
       defaultReplicaCount: 2
       defaultLonghornStaticStorageClass: longhorn
+      defaultDataPath: /mnt/disk0/longhorn
     ingress:
       enabled: true
       ingressClassName: "nginx"
@@ -36,6 +41,7 @@ spec:
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-production"
         hajimari.io/enable: "true"
-        hajimari.io/icon: "content-save"
-        hajimari.io/appName: "longhorn"
+        hajimari.io/icon: cow
+        hajimari.io/group: storage"
+        hajimari.io/appName: longhorn
         nginx.ingress.kubernetes.io/whitelist-source-range: "${SECRET_NETWORK_INGRESS_WHITELIST}"

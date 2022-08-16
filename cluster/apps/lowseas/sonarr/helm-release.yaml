@@ -28,10 +28,6 @@ spec:
       remediateLastFailure: true
     cleanupOnFail: true
 
-  dependsOn:
-    - name: vpn-gateway
-      namespace: networking
-
   values:
     image:
       repository: ghcr.io/k8s-at-home/sonarr-develop

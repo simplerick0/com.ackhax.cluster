@@ -86,7 +86,7 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: pod-gateway-config
+        existingClaim: vpn-gateway-config
 
     addons:
       vpn:
@@ -142,7 +142,7 @@ spec:
         additionalVolumes:
           - name: data
             persistentVolumeClaim:
-              claimName: pod-gateway-data
+              claimName: vpn-gateway-data
 
         networkPolicy:
           enabled: true

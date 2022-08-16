@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pod-gateway-config
+  name: vpn-gateway-config
   namespace: networking
 spec:
   accessModes:

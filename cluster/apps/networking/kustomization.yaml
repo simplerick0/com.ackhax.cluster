@@ -8,5 +8,5 @@ resources:
   - ingress-nginx
   - metallb
   - k8s-gateway
-  - pihole
-  - vpn-gateway
+  #- pihole
+  #- vpn-gateway

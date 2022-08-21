@@ -85,3 +85,7 @@
         path: "{{ k3s_server_manifests_dir }}/{{ item.filename }}"
         state: absent
       loop: "{{ k3s_server_manifests_urls | default([]) }}"
+
+    - name: Apply node annotations
+      ansible.builtin.command: kubectl annotate {{ inventory_hostname }} {{ item }}
+      loop: "{{ k3s_node_annotations | default([]) }}"

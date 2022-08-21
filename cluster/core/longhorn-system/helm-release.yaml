@@ -33,14 +33,15 @@ spec:
       # backupTarget: s3://longhorn@minio/backups
       # backupTargetCredentialSecret: longhorn-backup
       createDefaultDiskLabeledNodes: true
-      defaulDataLocality: best-effort
-      nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
-      concurrentAutomaticEngineUpgradePerNodeLimit: 1
+      defaultDataPath: /mnt/disk0/longhorn
       replicaSoftAntiAffinity: false
       storageMinimalAvailablePercentage: 10
+      upgradeChecker: false
       defaultReplicaCount: 2
-      defaultLonghornStaticStorageClass: longhorn
-      defaultDataPath: /mnt/disk0/longhorn
+      defaulDataLocality: best-effort
+      defaultLonghornStaticStorageClass: longhorn-pv
+      nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+      concurrentAutomaticEngineUpgradePerNodeLimit: 1
       guaranteedEngineManagerCPU: 8
       guaranteedReplicaManagerCPU: 8
     ingress:
@@ -56,3 +57,8 @@ spec:
         hajimari.io/group: storage"
         hajimari.io/appName: longhorn
         nginx.ingress.kubernetes.io/whitelist-source-range: "${SECRET_NETWORK_INGRESS_WHITELIST}"
+        nginx.ingress.kubernetes.io/auth-type: basic
+        # nginx.ingress.kubernetes.io/ssl-redirect: false
+        nginx.ingress.kubernetes.io/auth-secret: longhorn-auth-secret
+        nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required '
+        nginx.ingress.kubernetes.io/proxy-body-size: 10000m

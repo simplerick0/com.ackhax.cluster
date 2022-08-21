@@ -1,0 +1,110 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nzbget
+  namespace: highseas
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: nzbget
+      version: 12.4.2
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux-system
+      interval: 5m
+
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    cleanupOnFail: true
+
+  dependsOn:
+    - name: pod-gateway
+      namespace: networking
+
+  values:
+    image:
+      repository: ghcr.io/k8s-at-home/nzbget
+      tag: v21.1
+
+    hostname: nzb
+
+    env:
+      TZ: '${TIMEZONE}'
+
+    podAnnotations:
+      setGateway: 'true'
+
+    settings:
+      automaticPortSetup: false
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: 'nginx'
+        annotations:
+          cert-manager.io/cluster-issuer: 'letsencrypt-production'
+          hajimari.io/enable: 'true'
+          hajimari.io/icon: 'cloud-download'
+          nginx.ingress.kubernetes.io/whitelist-source-range: "${SECRET_NETWORK_INGRESS_WHITELIST}"
+        hosts:
+          - host: 'nzb.${SECRET_DOMAIN}'
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - 'nzb.${SECRET_DOMAIN}'
+            secretName: 'nzbget-tls'
+      api:
+        enabled: true
+        ingressClassName: 'nginx'
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: "${SECRET_NETWORK_INGRESS_WHITELIST}"
+        tls:
+          - hosts:
+              - 'nzb.${SECRET_DOMAIN}'
+            secretName: 'nzbget-tls'
+
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: nzbget-config
+      downloads:
+        enabled: true
+        existingClaim: highseas-downloads
+      media:
+        enabled: true
+        type: nfs
+        server: "${SECRET_NFS_SERVER_IP}"
+        path: "${SECRET_NFS_SERVER_MEDIA_PATH}"
+        mountPath: /media
+
+    resources:
+      requests:
+        memory: 250Mi
+        cpu: 100m
+      limits:
+        memory: 2Gi

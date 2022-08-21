@@ -5,6 +5,7 @@ resources:
   - namespace.yaml
   # - flood
   - ombi
+  - prowlarr
   - sonarr
   - radarr
   # - tdarr

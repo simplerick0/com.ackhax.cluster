@@ -5,5 +5,5 @@ resources:
   - namespace.yaml
   - downloads-pvc.yaml
   - qbittorrent
-  # - sabnzbd
-  # - terminal
+  - sabnzbd
+  - terminal

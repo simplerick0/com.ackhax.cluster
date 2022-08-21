@@ -8,7 +8,7 @@ resources:
   # - iot
   - kube-system
   # - family
-  # - lowseas
+  - lowseas
   - networking
   - security
   # - system-upgrade

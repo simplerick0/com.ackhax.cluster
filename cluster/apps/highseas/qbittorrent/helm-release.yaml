@@ -46,10 +46,10 @@ spec:
       setGateway: 'true'
 
     # TODO: Further testing required, tracker host was found when this was added. Pretty sure
-    dnsConfig:
-      options:
-        - name: ndots
-          value: "1"
+    # dnsConfig:
+    #   options:
+    #     - name: ndots
+    #       value: "1"
 
     settings:
       automaticPortSetup: false
@@ -95,8 +95,8 @@ spec:
       runAsGroup: 1000
       fsGroup: 1000
       fsGroupChangePolicy: "OnRootMismatch"
-      supplementalGroups:
-        - 100
+      # supplementalGroups:
+      #   - 100
 
     persistence:
       config:

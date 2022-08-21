@@ -1,0 +1,80 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: prowlarr
+  namespace: lowseas
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: prowlarr
+      version: 4.5.2
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux-system
+      interval: 5m
+
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    cleanupOnFail: true
+
+  values:
+    image:
+      repository: ghcr.io/k8s-at-home/prowlarr
+      tag: v0.4.0.1802
+
+    env:
+      TZ: '${TIMEZONE}'
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: 'nginx'
+        annotations:
+          cert-manager.io/cluster-issuer: 'letsencrypt-production'
+          hajimari.io/enable: 'true'
+          hajimari.io/icon: 'cloud-download'
+          nginx.ingress.kubernetes.io/whitelist-source-range: "${SECRET_NETWORK_INGRESS_WHITELIST}"
+        hosts:
+          - host: 'prowlarr.${SECRET_DOMAIN}'
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - 'prowlarr.${SECRET_DOMAIN}'
+            secretName: 'prowlarr-tls'
+
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: prowlarr-config
+      media:
+        enabled: true
+        type: nfs
+        server: "${SECRET_NFS_SERVER_IP}"
+        path: "${SECRET_NFS_SERVER_MEDIA_PATH}"
+        mountPath: /media
+
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 25m
+      limits:
+        memory: 500Mi

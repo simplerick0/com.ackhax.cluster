@@ -29,7 +29,7 @@ spec:
     cleanupOnFail: true
 
   dependsOn:
-    - name: vpn-gateway
+    - name: pod-gateway
       namespace: networking
 
   values:

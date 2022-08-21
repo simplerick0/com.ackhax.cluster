@@ -31,5 +31,5 @@ k3s_server_manifests_urls:
 k3s_server_manifests_templates:
   - "calico-installation.yaml.j2"
   - kube-vip-daemonset.yaml.j2
-k3s_node_annotations:
+k3s_node_labels:
   - node.longhorn.io/create-default-disk=true

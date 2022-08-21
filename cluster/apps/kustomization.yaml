@@ -11,5 +11,4 @@ resources:
   #- lowseas
   - networking
   - security
-  - storage
   # - system-upgrade

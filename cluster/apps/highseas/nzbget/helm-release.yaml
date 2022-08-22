@@ -45,15 +45,6 @@ spec:
     podAnnotations:
       setGateway: 'true'
 
-    settings:
-      automaticPortSetup: false
-
-    service:
-      main:
-        ports:
-          http:
-            port: 8080
-
     ingress:
       main:
         enabled: true

@@ -30,8 +30,8 @@ spec:
       defaultFsType: ext4
       reclaimPolicy: Retain
     defaultSettings:
-      # backupTarget: s3://${SECRET_LONGHORN_BACKUP_TARGET}
-      # backupTargetCredentialSecret: longhorn-b2-secret
+      backupTarget: s3://${SECRET_LONGHORN_BACKUP_TARGET}
+      backupTargetCredentialSecret: longhorn-b2-secret
       createDefaultDiskLabeledNodes: true
       defaultDataPath: /mnt/disk0/longhorn
       replicaSoftAntiAffinity: false

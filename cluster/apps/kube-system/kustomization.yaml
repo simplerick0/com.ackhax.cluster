@@ -6,6 +6,5 @@ resources:
   - cert-manager
   # - kured
   - metrics-server
-  - reflector
   - reloader
   - kube-vip

@@ -8,12 +8,12 @@ spec:
   interval: 5m
   chart:
     spec:
-      # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: nzbget
       version: 12.4.2
       sourceRef:
         kind: HelmRepository
-        name: bjw-s
+        name: k8s-at-home
         namespace: flux-system
       interval: 5m
 

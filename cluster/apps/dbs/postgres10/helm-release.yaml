@@ -39,18 +39,18 @@ spec:
     auth:
       database: ${SECRET_DBS_POSTGRES10_DB_NAME}
 
-    metrics:
-      enabled: true
-      serviceMonitor:
-        enabled: true
+    # metrics:
+    #   enabled: true
+    #   serviceMonitor:
+    #     enabled: true
 
-      resources:
-        requests:
-          cpu: 11m
-          memory: 32M
-        limits:
-          cpu: 11m
-          memory: 32M
+    #   resources:
+    #     requests:
+    #       cpu: 11m
+    #       memory: 32M
+    #     limits:
+    #       cpu: 11m
+    #       memory: 32M
 
     primary:
       persistence:

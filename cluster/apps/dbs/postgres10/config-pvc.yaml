@@ -2,8 +2,8 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: postgre10-config
-  namespace: databases
+  name: postgres10-config
+  namespace: dbs
 spec:
   accessModes:
     - ReadWriteOnce

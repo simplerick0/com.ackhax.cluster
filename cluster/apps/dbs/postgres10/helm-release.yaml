@@ -33,7 +33,7 @@ spec:
     image:
       registry: docker.io
       repository: bitnami/postgresql
-      tag: 10-debian-11
+      tag: 14-debian-11
       pullPolicy: IfNotPresent
 
     auth:

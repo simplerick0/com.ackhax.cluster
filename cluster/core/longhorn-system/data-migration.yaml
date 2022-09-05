@@ -28,7 +28,7 @@ spec:
       volumes:
         - name: old-vol
           persistentVolumeClaim:
-            claimName: vaultwarden-config-old
+            claimName: vaultwarden-config
         - name: new-vol
           persistentVolumeClaim:
-            claimName: vaultwarden-config
+            claimName: vaultwarden-config-v2

@@ -7,20 +7,20 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: longhorn
+  storageClassName: local-path
   resources:
     requests:
-      storage: 10Gi
+      storage: 1Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: vaultwarden-config-old
+  name: vaultwarden-config-v2
   namespace: security
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: local-path
+  storageClassName: longhorn
   resources:
     requests:
       storage: 1Gi

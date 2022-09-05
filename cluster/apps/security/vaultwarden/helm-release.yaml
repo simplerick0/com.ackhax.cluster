@@ -8,11 +8,12 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: vaultwarden
-      version: 5.3.2
+      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
+      chart: app-template
+      version: 0.1.1
       sourceRef:
         kind: HelmRepository
-        name: k8s-at-home
+        name: bjw-s
         namespace: flux-system
       interval: 5m
   install:
@@ -47,6 +48,14 @@ spec:
       SMTP_PASSWORD: "${SECRET_VAULTWARDEN_EMAIL_KEY}"
       YUBICO_CLIENT_ID: "${SECRET_VAULTWARDEN_YUBICO_CLIENT_ID}"
       YUBICO_SECRET_KEY: "${SECRET_VAULTWARDEN_YUBICO_SECRET_KEY}"
+    service:
+      main:
+        ports:
+          http:
+            port: 80
+          websocket:
+            enabled: true
+            port: 3012
     ingress:
       main:
         enabled: true

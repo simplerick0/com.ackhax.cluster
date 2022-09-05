@@ -19,11 +19,17 @@ spec:
 
   values:
     image:
-      repository: ghcr.io/linuxserver/ombi
-      tag: version-v4.0.1430
+      repository: lscr.io/linuxserver/ombi
+      tag: 4.22.5
 
     env:
       TZ: "${TZ}"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 3579
 
     ingress:
       main:

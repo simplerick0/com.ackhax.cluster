@@ -49,19 +49,17 @@ spec:
       DEFAULT_FROM_EMAIL: "${SECRET_RECIPES_EMAIL_ADDR}"
       ACCOUNT_EMAIL_SUBJECT_PREFIX: "[Recipes]"
       TIMEZONE: ${TIMEZONE}
+      ALLOWED_HOSTS: "*"
       SECRET_KEY: ${SECRET_RECIPES_SECRET_KEY}
-      DB_ENGINE: django.db.backends.postgresql_psycopg2
+      DB_ENGINE: django.db.backends.postgresql
       POSTGRES_HOST: ${SECRET_DBS_POSTGRES14_ADDRESS}
       POSTGRES_PORT: 5432
       POSTGRES_DB: recipes
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${SECRET_RECIPES_DB_PASSWORD}
-
-    sidecar:
-      image:
-        repository: nginx
-        tag: 1.23.1
-        pullPolicy: IfNotPresent
+      FRACTION_PREF_DEFAULT: "0"
+      COMMENT_PREF_DEFAULT: "1"
+      SHOPPING_MIN_AUTOSYNC_INTERVAL: "5"
 
     persistence:
       config:
@@ -75,6 +73,12 @@ spec:
         enabled: true
         type: emptyDir
         mountPath: /opt/recipes/staticfiles
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
 
     ingress:
       main:

@@ -28,7 +28,7 @@ spec:
       volumes:
         - name: old-vol
           persistentVolumeClaim:
-            claimName: qbittorrent-config # change to data source pvc
+            claimName: vaultwarden-config-old
         - name: new-vol
           persistentVolumeClaim:
-            claimName: qbittorrent-config-temp # change to data target pvc
+            claimName: vaultwarden-config

@@ -9,8 +9,8 @@ spec:
   chart:
     spec:
       # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
-      chart: recipes
-      version: 6.6.2
+      chart: app-template
+      version: 0.1.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -29,8 +29,8 @@ spec:
     cleanupOnFail: true
 
   dependsOn:
-    - name: psql-family
-      namespace: family
+    - name: postgres14
+      namespace: dbs
 
   values:
     image:
@@ -50,11 +50,11 @@ spec:
       ACCOUNT_EMAIL_SUBJECT_PREFIX: "[Recipes]"
       TIMEZONE: ${TIMEZONE}
       SECRET_KEY: ${SECRET_RECIPES_SECRET_KEY}
-      DB_ENGINE: django.db.backends.postgresql
-      POSTGRES_HOST: psql-family-postgresql
+      DB_ENGINE: django.db.backends.postgresql_psycopg2
+      POSTGRES_HOST: ${SECRET_DBS_POSTGRES14_ADDRESS}
       POSTGRES_PORT: 5432
       POSTGRES_DB: recipes
-      POSTGRES_USER: recipes
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${SECRET_RECIPES_DB_PASSWORD}
 
     sidecar:

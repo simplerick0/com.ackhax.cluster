@@ -32,6 +32,7 @@ spec:
         enabled: true
         existingClaim: vaultwarden-config
     env:
+      DATA_FOLDER: config
       SIGNUPS_ALLOWED: false
       INVITATIONS_ALLOWED: true
       WEBSOCKET_ENABLED: true

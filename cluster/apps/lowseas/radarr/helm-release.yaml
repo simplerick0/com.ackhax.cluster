@@ -28,12 +28,6 @@ spec:
       remediateLastFailure: true
     cleanupOnFail: true
 
-    service:
-      main:
-        ports:
-          http:
-            port: 7878
-
   values:
     image:
       repository: ghcr.io/k8s-at-home/radarr
@@ -41,6 +35,12 @@ spec:
 
     env:
       TZ: '${TIMEZONE}'
+
+    service:
+      main:
+        ports:
+          http:
+            port: 7878
 
     ingress:
       main:

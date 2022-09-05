@@ -76,12 +76,6 @@ spec:
         type: emptyDir
         mountPath: /opt/recipes/staticfiles
 
-    service:
-      main:
-        annotations:
-          prometheus.io/probe: "true"
-          prometheus.io/protocol: http
-
     ingress:
       main:
         enabled: true

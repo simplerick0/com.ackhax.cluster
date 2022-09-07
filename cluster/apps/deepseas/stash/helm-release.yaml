@@ -16,6 +16,13 @@ spec:
         name: bjw-s
         namespace: flux-system
   values:
+    image:
+      repository: stashapp/stash
+      tag: latest@sha256:24dbd76071745be0c4e75f730aa7ac2b37cb2b2918eabf8559643196b3b7a64a
+      pullPolicy: IfNotPresent
+
+    hostname: stash
+
     env:
       TZ: "${TIMEZONE}"
       STASH_STASH: /media/

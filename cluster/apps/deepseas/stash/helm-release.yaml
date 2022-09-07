@@ -25,6 +25,7 @@ spec:
 
     env:
       TZ: "${TIMEZONE}"
+      STASH_PORT: 9999
       STASH_STASH: /media/
       STASH_GENERATED: /generated/
       STASH_METADATA: /metadata/

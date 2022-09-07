@@ -26,7 +26,7 @@ spec:
     env:
       TZ: "${TIMEZONE}"
       STASH_PORT: 9999
-      STASH_STASH: /media/
+      STASH_STASH: /media/downloads/other/
       STASH_GENERATED: /generated/
       STASH_METADATA: /metadata/
       STASH_CACHE: /cache/

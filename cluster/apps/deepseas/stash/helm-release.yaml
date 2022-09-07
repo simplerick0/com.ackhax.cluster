@@ -85,3 +85,10 @@ spec:
         accessMode: ReadWriteOnce
         size: 10Gi
         mountPath: /cache
+
+    resources:
+      requests:
+        memory: 250Mi
+        cpu: 100m
+      limits:
+        memory: 500Mi

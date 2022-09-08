@@ -6,6 +6,7 @@ resources:
   - deepseas
   - default
   - flux-system
+  - games
   - highseas
   - iot
   - kube-system

@@ -30,7 +30,7 @@ spec:
 
   values:
     image:
-      repository: kruptein/planarally
+      repository: docker.io/kruptein/planarally
       tag: latest
 
     env:
@@ -62,9 +62,9 @@ spec:
             secretName: 'dnd-tls'
 
     podSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
+      runAsUser: 9000   # PlanarAlly expects port 9000
+      runAsGroup: 9000
+      fsGroup: 9000
       fsGroupChangePolicy: "OnRootMismatch"
 
     persistence:

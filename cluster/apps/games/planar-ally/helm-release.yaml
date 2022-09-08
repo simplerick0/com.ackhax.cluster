@@ -31,7 +31,7 @@ spec:
   values:
     image:
       repository: kruptein/planarally
-      tag: 2022.2.3
+      tag: latest
 
     env:
       TZ: '${TIMEZONE}'

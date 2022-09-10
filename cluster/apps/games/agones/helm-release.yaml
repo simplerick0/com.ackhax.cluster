@@ -40,7 +40,7 @@ spec:
         serviceMonitor:
           enabled: false
           interval: 30s
-      rbacEnabled: false  # true
+      rbacEnabled: true
       registerServiceAccounts: true
       registerWebhooks: true
       registerApiService: true

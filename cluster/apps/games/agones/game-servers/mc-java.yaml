@@ -1,0 +1,84 @@
+---
+apiVersion: 'agones.dev/v1'
+kind: GameServer
+metadata:
+  generateName: 'mc-server-'
+spec:
+  container: mc-server
+  ports:
+    - name: mc
+      portPolicy: Dynamic
+      container: mc-server
+      containerPort: 25565
+      protocol: TCP
+  health:
+    initialDelaySeconds: 60
+    periodSeconds: 12
+    failureThreshold: 5
+  template:
+    spec:
+      containers:
+        - name: mc-server
+          image: itzg/minecraft-server
+          env:
+            - name: EULA
+              value: "TRUE"
+          volumeMounts:
+            - mountPath: /data
+              name: world-vol
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 20m
+            limits:
+              memory: 2048Mi
+              cpu: 1000m
+
+        - name: mc-monitor
+          image: saulmaldonado/agones-mc
+          env:
+            - name: INITIAL_DELAY
+              value: 60s
+            - name: MAX_ATTEMPTS
+              value: "5"
+            - name: INTERVAL
+              value: 10s
+            - name: TIMEOUT
+              value: 10s
+          args:
+            - monitor
+          imagePullPolicy: Always
+
+        - name: mc-backup
+          image: saulmaldonado/agones-mc
+          args:
+            - backup
+          env:
+            - name: BUCKET_NAME
+              value: agones-minecraft-mc-worlds
+            - name: BACKUP_CRON
+              value: 0 */6 * * *
+            - name: INITIAL_DELAY
+              value: 60s
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: RCON_PASSWORD
+              value: minecraft # default
+
+        - name: mc-fileserver
+          image: saulmaldonado/agones-mc
+          args:
+            - fileserver
+          env:
+            - name: VOLUME
+              value: /data
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /data
+              name: world-vol
+
+      volumes:
+        - name: world-vol
+          emptyDir: {}

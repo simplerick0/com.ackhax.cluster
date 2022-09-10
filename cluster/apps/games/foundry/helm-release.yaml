@@ -66,6 +66,9 @@ spec:
       config:
         enabled: true
         existingClaim: foundry-config
+      data:
+        enabled: true
+        existingClaim: foundry-data
 
     resources:
       requests:

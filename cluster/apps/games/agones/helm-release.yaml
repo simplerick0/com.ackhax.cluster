@@ -135,7 +135,7 @@ spec:
           response: ok
           port: 80
           serviceType: LoadBalancer
-          loadBalancerIP: "${SECRET_GAMES_AGONES_ADDRESS}"
+          loadBalancerIP: ""
           loadBalancerSourceRanges: []
           annotations: {}
         udp:
@@ -143,7 +143,7 @@ spec:
           rateLimit: 20
           port: 50000
           serviceType: LoadBalancer
-          loadBalancerIP: "${SECRET_GAMES_AGONES_ADDRESS}"
+          loadBalancerIP: ""
           loadBalancerSourceRanges: []
           annotations: {}
         healthCheck:

@@ -96,7 +96,7 @@ spec:
         safeToEvict: false
         persistentLogs: true
         persistentLogsSizeLimitMB: 10000
-        logLevel: info
+        logLevel: debug
         numWorkers: 100
         apiServerQPS: 400
         apiServerQPSBurst: 500

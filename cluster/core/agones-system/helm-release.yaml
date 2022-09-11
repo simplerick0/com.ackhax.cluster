@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: agones
-  namespace: games
+  namespace: agones-system
 spec:
   interval: 5m
   chart:
@@ -183,7 +183,7 @@ spec:
         service:
           name: agones-allocator
           serviceType: LoadBalancer
-          loadBalancerIP: "${SECRET_GAMES_AGONES_ADDRESS}"
+          loadBalancerIP: "${SECRET_AGONES_ADDRESS}"
           loadBalancerSourceRanges: []
           annotations: {}
           http:

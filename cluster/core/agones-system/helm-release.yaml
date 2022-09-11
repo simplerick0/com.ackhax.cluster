@@ -40,7 +40,7 @@ spec:
         serviceMonitor:
           enabled: false
           interval: 30s
-      rbacEnabled: false
+      rbacEnabled: true
       registerServiceAccounts: true
       registerWebhooks: true
       registerApiService: true
@@ -244,4 +244,4 @@ spec:
       podPreserveUnknownFields: false
 
     helm:
-      installTests: false
+      installTests: true

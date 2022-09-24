@@ -62,3 +62,10 @@ spec:
         nginx.ingress.kubernetes.io/auth-secret: longhorn-auth-secret
         nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required '
         nginx.ingress.kubernetes.io/proxy-body-size: 10000m
+    resources:
+      requests:
+        cpu: 50m
+        memory: 50Mi
+      limits:
+        cpu: 2550m
+        memory: 500Mi

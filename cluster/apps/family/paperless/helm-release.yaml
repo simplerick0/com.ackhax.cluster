@@ -91,25 +91,25 @@ spec:
         enabled: true
         mountPath: /usr/src/paperless/data
         type: nfs
-        server: "nas.${SECRET_DOMAIN}"
+        server: "${SECRET_NFS_SERVER_IP}"
         path: "${SECRET_NFS_SERVER_ARCHIVE_PATH}/400_documents/paperless/data"
       media:
         enabled: true
         mountPath: /usr/src/paperless/media
         type: nfs
-        server: "nas.${SECRET_DOMAIN}"
+        server: "${SECRET_NFS_SERVER_IP}"
         path: "${SECRET_NFS_SERVER_ARCHIVE_PATH}/400_documents/paperless/media"
       consume:
         enabled: true
         mountPath: /usr/src/paperless/consume
         type: nfs
-        server: "nas.${SECRET_DOMAIN}"
+        server: "${SECRET_NFS_SERVER_IP}"
         path: "${SECRET_NFS_SERVER_ARCHIVE_PATH}/400_documents/paperless/consume"
       export:
         enabled: true
         mountPath: /usr/src/paperless/export
         type: nfs
-        server: "nas.${SECRET_DOMAIN}"
+        server: "${SECRET_NFS_SERVER_IP}"
         path: "${SECRET_NFS_SERVER_ARCHIVE_PATH}/400_documents/paperless/export"
 
     additionalContainers:

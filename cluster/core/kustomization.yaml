@@ -4,8 +4,6 @@ kind: Kustomization
 resources:
   - cluster-issuers
   - nfs
-  # - agones-namespace.yaml
-  # - agones-system
   - longhorn-namespace.yaml
   - longhorn-system
   - storage-namespace.yaml

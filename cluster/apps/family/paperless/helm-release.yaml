@@ -1,0 +1,137 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: paperless
+  namespace: family
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
+      chart: app-template
+      version: 0.2.2
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 5m
+
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    cleanupOnFail: true
+
+  dependsOn:
+    - name: postgres14
+      namespace: dbs
+
+  values:
+    image:
+      repository: ghcr.io/paperless-ngx/paperless-ngx
+      tag: 1.9.2
+      pullPolicy: IfNotPresent
+
+    env:
+      COMPOSE_PROJECT_NAME: paperless
+      PAPERLESS_OCR_LANGUAGE: nld
+      PAPERLESS_CONSUMER_POLLING: "60"
+      PAPERLESS_CONSUMER_RECURSIVE: "true"
+      PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: "true"
+      PAPERLESS_PORT: 8000
+      PAPERLESS_REDIS: redis://localhost:6379
+      PAPERLESS_TASK_WORKERS: 2
+      PAPERLESS_TIME_ZONE: "${TIMEZONE}"
+      PAPERLESS_URL: https://paperless.${SECRET_DOMAIN}
+      PAPERLESS_DBHOST: postgres14.dbs.svc
+      PAPERLESS_DBNAME: paperless
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://localhost:3000
+      PAPERLESS_TIKA_ENDPOINT: http://localhost:9998
+      USERMAP_GID: 65543
+
+    envFrom:
+      - secretRef:
+          name: paperless
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8000
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: "nginx"
+        annotations:
+          cert-manager.io/cluster-issuer: 'letsencrypt-production'
+          hajimari.io/enable: 'true'
+          hajimari.io/icon: 'file-outline'
+          nginx.ingress.kubernetes.io/whitelist-source-range: "${SECRET_NETWORK_INGRESS_WHITELIST}"
+          nginx.ingress.kubernetes.io/proxy-body-size: 4G
+        hosts:
+          - host: "paperless.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - "paperless.${SECRET_DOMAIN}"
+            secretName: "paperless-tls"
+
+    persistence:
+      data:
+        enabled: true
+        mountPath: /usr/src/paperless/data
+        type: nfs
+        server: "nas.${SECRET_DOMAIN}"
+        path: "${SECRET_NFS_SERVER_ARCHIVE_PATH}/400_documents/paperless/data"
+      media:
+        enabled: true
+        mountPath: /usr/src/paperless/media
+        type: nfs
+        server: "nas.${SECRET_DOMAIN}"
+        path: "${SECRET_NFS_SERVER_ARCHIVE_PATH}/400_documents/paperless/media"
+      consume:
+        enabled: true
+        mountPath: /usr/src/paperless/consume
+        type: nfs
+        server: "nas.${SECRET_DOMAIN}"
+        path: "${SECRET_NFS_SERVER_ARCHIVE_PATH}/400_documents/paperless/consume"
+      export:
+        enabled: true
+        mountPath: /usr/src/paperless/export
+        type: nfs
+        server: "nas.${SECRET_DOMAIN}"
+        path: "${SECRET_NFS_SERVER_ARCHIVE_PATH}/400_documents/paperless/export"
+
+    additionalContainers:
+      redis:
+        name: redis
+        image: redis:7.0
+        imagePullPolicy: IfNotPresent
+
+      gotenburg:
+        name: gotenburg
+        image: thecodingmachine/gotenberg:7.6.1
+        env:
+          - name: DISABLE_GOOGLE_CHROME
+            value: "1"
+      tika:
+        image: apache/tika:2.4.1
+        name: tika
+        imagePullPolicy: Always
+
+    resources:
+      requests:
+        cpu: 23m
+        memory: 256M
+      limits:
+        memory: 1024M

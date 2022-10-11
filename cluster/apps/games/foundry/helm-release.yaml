@@ -29,7 +29,7 @@ spec:
   values:
     image:
       repository: felddy/foundryvtt
-      tag: 10.285.0
+      tag: 10.288.0
 
     service:
       main:
